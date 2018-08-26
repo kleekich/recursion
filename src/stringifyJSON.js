@@ -13,8 +13,7 @@ var stringifyJSON = function(obj) {
   if(obj === null) return 'null';
   else if(typeof obj === 'number' || typeof obj === 'boolean' ) return obj.toString();
   result = '';
-  //Each or reduce
-  if(typeof obj === 'string') return result.concat('"'+obj+'"');
+  if(typeof obj === 'string') return '"'+obj+'"';
   else if(typeof obj === "object"){
   	//If obj is an array
   	if(Array.isArray(obj)){
