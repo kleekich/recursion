@@ -5,66 +5,69 @@
 
 var stringifyJSON = function(obj) {
   // your code goes here
+  /*
+	
+
+  */
+
   if(obj === null) return 'null';
   else if(typeof obj === 'number' || typeof obj === 'boolean' ) return obj.toString();
   result = '';
   //Each or reduce
   if(typeof obj === 'string') return result.concat('"').concat(obj).concat('"');
   else if(typeof obj === "object"){
+  	//If obj is an array
   	if(Array.isArray(obj)){
+  		//Starting
   		result = result.concat('[');
+  		//For every element
   		for(var i = 0; i < obj.length; i++){
+  			//add comma from the second element
   			if(i !== 0) result = result.concat(',');
+  			//If it is an object, we call recursively
   			if(typeof obj[i] === 'object'){
   				result = result.concat(stringifyJSON(obj[i]));
+  			//If it is a string, we wrap it with "" 
   			}else if(typeof obj[i] === 'string'){
   				result = result.concat('"').concat(obj[i]).concat('"');
+  			//Otherwise, we just add element to result
   			}else{
   				result = result.concat(obj[i]);
   			}
   		}
+  		//Closing
   		result = result.concat(']');
+  	//If obj is a object
   	}else{
+  		//Starting
   		result = result.concat('{');
+  		//for each property
   		for(var key in obj){
+  			//We skip if current value is undefined or function
   			if(typeof obj[key] === 'undefined' || typeof obj[key] === 'function'){
 		  		continue;
 		  	}
+		  	//We concat ',' for from the second property
   			if(key !== Object.keys(obj)[0]) result = result.concat(',');
+  			//If the value is an object again,
   			if(typeof obj[key] === 'object'){
+  				//If it is a null, we concat null
   				if(obj[key] === null)  result = result.concat('"'+key+'":null');
+  				//Otherwise, we recurrsively call
   				else result = result.concat('"'+key+'":').concat(stringifyJSON(obj[key]));
+  			//If the value is not an object,
   			}else{
+  				//If the value is type of string
   				if(typeof obj[key] === 'string') result = result.concat('"'+key+'":"').concat(obj[key].toString()).concat('"');
+  				//Otherwise, we just concat
   				else result = result.concat('"'+key+'":').concat(obj[key]);
   			}
   		}
+  		//closing
   		result = result.concat('}');
   	}
   	return result;
 
-
-
-
-
-  	/*
-  	if(!Array.isArray(obj))result = result.concat('{');
-  	for(var key in obj){
-  		//For array with more than one element, we need to insert comma after every 
-  		if(Array.isArray(obj) && key !== '0') result = result.concat(',');
-	  	if(!Array.isArray(obj) && typeof obj[key] === "object"){
-	  		result = result.concat('"'+key+'"').concat(stringifyJSON(obj[key]));
-	  	}else if(typeof obj[key] === "object"){
-	  		result = result.concat(stringifyJSON(obj[key]));
-	  	}else if(typeof obj[key] === undefined || typeof obj[key] === 'function'){
-	  		continue;
-	  	}else{
-	  		if(typeof obj[key] === 'string') result = result.concat('"').concat(obj[key]).concat('"');
-	  		else result = result.concat(obj[key]);
-
-	  	}
-	}
-	*/
   }
   if(Array.isArray(obj)) result = "[".concat(result).concat("]");
   if(typeof obj === 'object' && !Array.isArray(obj)) result = result.concat("}");
