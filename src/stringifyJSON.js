@@ -14,7 +14,7 @@ var stringifyJSON = function(obj) {
   else if(typeof obj === 'number' || typeof obj === 'boolean' ) return obj.toString();
   result = '';
   //Each or reduce
-  if(typeof obj === 'string') return result.concat('"').concat(obj).concat('"');
+  if(typeof obj === 'string') return result.concat('"'+obj+'"');
   else if(typeof obj === "object"){
   	//If obj is an array
   	if(Array.isArray(obj)){
@@ -29,7 +29,7 @@ var stringifyJSON = function(obj) {
   				result = result.concat(stringifyJSON(obj[i]));
   			//If it is a string, we wrap it with "" 
   			}else if(typeof obj[i] === 'string'){
-  				result = result.concat('"').concat(obj[i]).concat('"');
+  				result = result.concat('"'+obj[i]+'"');
   			//Otherwise, we just add element to result
   			}else{
   				result = result.concat(obj[i]);
@@ -54,13 +54,13 @@ var stringifyJSON = function(obj) {
   				//If it is a null, we concat null
   				if(obj[key] === null)  result = result.concat('"'+key+'":null');
   				//Otherwise, we recurrsively call
-  				else result = result.concat('"'+key+'":').concat(stringifyJSON(obj[key]));
+  				else result = result.concat('"'+key+'":'+stringifyJSON(obj[key]));
   			//If the value is not an object,
   			}else{
   				//If the value is type of string
-  				if(typeof obj[key] === 'string') result = result.concat('"'+key+'":"').concat(obj[key].toString()).concat('"');
+  				if(typeof obj[key] === 'string') result = result.concat('"'+key+'":"'+obj[key]+'"');
   				//Otherwise, we just concat
-  				else result = result.concat('"'+key+'":').concat(obj[key]);
+  				else result = result.concat('"'+key+'":'+obj[key]);
   			}
   		}
   		//closing
@@ -69,7 +69,7 @@ var stringifyJSON = function(obj) {
   	return result;
 
   }
-  if(Array.isArray(obj)) result = "[".concat(result).concat("]");
+  if(Array.isArray(obj)) result = "[".concat(result+"]");
   if(typeof obj === 'object' && !Array.isArray(obj)) result = result.concat("}");
   return result;
 };
