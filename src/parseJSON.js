@@ -4,6 +4,7 @@
 // but you're not, so you'll write it from scratch:
 var parseJSON = function(json) {
   	//Edge cases
+  	//if(json===undefined) return
  	if(json==='null') return null;
 
   	//string
@@ -66,28 +67,39 @@ var parseJSON = function(json) {
 				json = json.trim();
 				var indexOfColon = json.indexOf(':');
 				var key = json.slice(1, indexOfColon-1);
-				json = json.trim();
 				json = json.slice(indexOfColon+1,json.length);
 				json = json.trim();
 				var indexOfComma = json.indexOf(',');
-				var indexOfOpeningBracket = json.indexOf('{') || json.indexOf('[');
+
+				var openAny = json.indexOf('[') !== -1 || json.indexOf('{') !== -1;
+				var indexOfOpeningBracketSquare = json.indexOf('[') === -1? 0: json.indexOf('[');
+				var indexOfOpeningBracketCurly = json.indexOf('{') === -1? 0: json.indexOf('{');
+				
+				var indexOfOpeningBracket = Math.min(indexOfOpeningBracketSquare,indexOfOpeningBracketCurly );
+				//If there is another object or Array
+				if( openAny  ){
+					var indexOfClosingBracketSquare = json.indexOf(']') === -1? 0: json.indexOf(']');
+					var indexOfClosingBracketCurly = json.indexOf('}') === -1? 0: json.indexOf('}');
+					var indexOfClosingBracket = Math.max(indexOfClosingBracketSquare,indexOfClosingBracketCurly );
+
+					res[key] = parseJSON(json.slice(indexOfOpeningBracket, indexOfClosingBracket+1));
+					json = json.slice(indexOfClosingBracket+1);
+					continue;
+				}
 				//If there is no more elements
-				if(indexOfComma === -1 && indexOfOpeningBracket === -1){
+				else if(indexOfComma === -1 && !openAny){
 					var value = json.slice(0,json.length);
 					json = json.splice(0,json.length);
 				}
-				//If there is another object
-				else if(indexOfOpeningBracket!==-1 &&indexOfOpeningBracket<indexOfComma ){
-					var indexOfOpenCurlyBracket = json.indexOf('{');
-					var indexOfOpenSquareBracket = json.indexOf('[');
-				}
 				//if there is another property,
-				else if(indexOfComma !== -1){
+				else if(indexOfComma !== -1 ){
+					json = json.trim();
 					var value = json.slice(0,indexOfComma);
 					json = json.splice(0,indexOfComma+1);
 				}
 				//recursive call;
 				res[key] = parseJSON(value);
+				
 			}
 			if(json.length >0){
 				var indexOfColon = json.indexOf(':');
