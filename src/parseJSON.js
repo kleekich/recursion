@@ -3,7 +3,6 @@
 
 // but you're not, so you'll write it from scratch:
 var parseJSON = function(json) {
-  	//Edge cases
   	//if(json===undefined) return
  	if(json==='null') return null;
 
@@ -17,26 +16,16 @@ var parseJSON = function(json) {
 	}else if(json === 'false'){
 		return false;
 	}
-  //number
+  	//number
 	else if(typeof parseFloat(json) === "number" && json.charAt(0) !== '[' && json.charAt(0) !== '{'){
 		return parseFloat(json);
 	}
-	
-	
-
 	//Array
 	else if(json.charAt(0) === '[' && json.charAt(json.length-1) === ']'){
 		var res = [];
 		//getting only elements separated by comma
-		json = json.splice(0,1)
-		json = json.splice(json.length-1, 1)
-		
-		//Error
-		if (json.slice(json.length-1) === ',') {
-	  		var errorLine = json.length-1;
-	  		throw new SyntaxError('Unexpected token ] in JSON at position','JSON');
-		}
-	
+		json = json.splice(0,1);
+		json = json.splice(json.length-1, 1);
 		//While we find any comma
 		while(json.indexOf(',') !== -1){
 			json = json.trim();
@@ -57,11 +46,6 @@ var parseJSON = function(json) {
 			json = json.splice(0,1)
 			json = json.splice(json.length-1, 1)
 			json = json.trim();
-			//error
-			if (json.slice(json.length-1) === ',') {
-		    	var errorLine = json.length-1;
-		    	throw new SyntaxError('Unexpected token } in JSON at position','JSON');
-		  	}
 		  	
 			while(json.indexOf(':') !== -1){
 				json = json.trim();
